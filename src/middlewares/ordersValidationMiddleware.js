@@ -33,3 +33,19 @@ export async function ordersValidation (req, res, next) {
     
     next();
 }
+
+export async function orderValidation (req, res, next) {
+    const { id } = req.params;
+
+    const orderExist = await DB.query(
+        'SELECT * FROM orders WHERE id = $1;',
+        [id]
+    );
+
+    if(orderExist.rows.length === 0){
+        res.send({message: "Ordem não identificada"}).status(404);
+        return;
+    };
+    
+    next();
+}
