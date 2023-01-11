@@ -2,9 +2,9 @@
 
 CREATE TABLE "clients" (
     "id" SERIAL PRIMARY KEY,
-    "name" VARCHAR NOT NULL,
-    "address" VARCHAR NOT NULL,
-    "phone" VARCHAR UNIQUE NOT NULL MIN(10) MAX(11)
+    "name" TEXT NOT NULL,
+    "address" TEXT NOT NULL,
+    "phone" VARCHAR(11) NOT NULL
 );
 
 CREATE TABLE "cakes" (
