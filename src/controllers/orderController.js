@@ -54,8 +54,8 @@ export async function findOrder(req, res){
             totalPrice: order.rows[0].totalPrice
         }
 
-        if(client.rows.length === 0){
-            res.send(client.rows).status(404);
+        if(item.length === 0){
+            res.send(item.rows).status(404);
             return;
         }
 
@@ -68,34 +68,26 @@ export async function findOrder(req, res){
 }
 
 export async function findOrders(req, res){
-    const { date } = req.query;
 
     try{
+        let resultado = [];
+
         const orders = await DB.query(
             `SELECT 
-            clients.* AS client, cakes.* AS cake,
-            orders.id AS "orderId", "createdAt",
-            quantity, "totalPrice"
-            FROM orders
-            JOIN clients ON clients.id = orders."clientId"
-            JOIN cakes ON cakes.id = orders."cakeId";`
+            orders.id AS "order.Id", orders.quantity, orders."createdAt", orders."totalPrice",
+            orders."clientId", client.name as "clientName", client.adress, client.phone,
+            orders."cakeId", cake.name  ,  
+            FROM orders;`
         );
-        /*const abc = 2023;
-        const filter = `%${date}%`;
 
-        const orders = await DB.query(
-            `SELECT
-            "createdAt"
-            FROM orders
-            WHERE "createdAt" ILIKE '%20%';`
-        );*/
+        
 
-        if(orders.rows.length === 0){
+        /*if(orders.rows.length === 0){
             res.send(orders.rows).status(404);
             return;
-        }
+        };*/
 
-        res.send(orders.rows).status(200);
+        res.send(resultado).status(200);
         return;
     }catch (error){
         res.send(error).status(500);
