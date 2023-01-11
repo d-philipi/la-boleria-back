@@ -5,4 +5,4 @@ export const cakesSchema = joi.object({
     price: joi.number().required(),
     image: joi.string().uri().required(),
     description: joi.string().required()
-})
+});
