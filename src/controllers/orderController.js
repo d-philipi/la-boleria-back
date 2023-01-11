@@ -74,20 +74,46 @@ export async function findOrders(req, res){
 
         const orders = await DB.query(
             `SELECT 
-            orders.id AS "order.Id", orders.quantity, orders."createdAt", orders."totalPrice",
-            orders."clientId", client.name as "clientName", client.adress, client.phone,
-            orders."cakeId", cake.name  ,  
-            FROM orders;`
+                o.id AS "orderId", o.quantity, o."createdAt", o."totalPrice",
+                o."clientId", cl.name AS "clientName", cl.address, cl.phone,
+                o."cakeId", ca.name AS "cakeName", ca.price, ca.image, ca.description
+                FROM orders o
+                JOIN clients cl ON o."clientId" = cl.id
+                JOIN cakes ca ON ca.id = o."cakeId";`
         );
+
+        for(let i = 0; i < orders.rows.length; i++){
+            const item ={
+                client:{
+                    id: orders.rows[i].clientId,
+                    name: orders.rows[i].clientName,
+                    address: orders.rows[i].address,
+                    phone: orders.rows[i].phone
+                },
+                cake:{
+                    id: orders.rows[i].cakeId,
+                    name: orders.rows[i].cakeName,
+                    price: orders.rows[i].price,
+                    description: orders.rows[i].description,
+                    image: orders.rows[i].image
+                },
+                orderId: orders.rows[i].orderId,
+                createdAt: orders.rows[i].createdAt,
+                quantity: orders.rows[i].quantity,
+                totalPrice: orders.rows[i].totalPrice
+            }
+
+            resultado[i] = item;
+        }
 
         
 
-        /*if(orders.rows.length === 0){
-            res.send(orders.rows).status(404);
+        if(resultado.length === 0){
+            res.send(resultado).status(404);
             return;
-        };*/
+        };
 
-        res.send(resultado).status(200);
+        res.send(orders).status(200);
         return;
     }catch (error){
         res.send(error).status(500);
